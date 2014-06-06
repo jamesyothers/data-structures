@@ -56,9 +56,4 @@ var makeNode = function(value){
  * Complexity: What is the time complexity of the above functions?
  */
 
-var list = makeLinkedList();
-
-list.addToTail(4);
-if(list.head() === list.tail()){
-}
 
