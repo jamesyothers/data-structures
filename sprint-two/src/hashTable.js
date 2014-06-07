@@ -6,17 +6,20 @@ var HashTable = function(){
 HashTable.prototype.insert = function(key, value){
   var i = getIndexBelowMaxForKey(key, this._limit);
   if (this._storage.get(i) === undefined) {
-    this._storage.set(i, value);
+    this._storage.set(i, [key, value]);
   }else{
-    var obj = this._storage.get(i);
-    // if object values are more than one
-    if (typeof obj === 'object') {
-      obj[key] = value;
-      this._storage.set(i, obj);
-    }else{
-      obj = {};
-      obj[key] = value;
-      this._storage.set(i, obj);
+    var index = this._storage.get(i);
+    if (Array.isArray(index[0])) {
+      // if there is a nested array at index
+      index.push([key, value]);
+      this._storage.set(i, index);
+    }else {
+      // if index is only a key, value pair
+      var formerValue = index;
+      index = [];
+      index.push(formerValue);
+      index.push([key, value]);
+      this._storage.set(i, index);
     }
   }
 
@@ -25,11 +28,18 @@ HashTable.prototype.insert = function(key, value){
 HashTable.prototype.retrieve = function(key){
   var i = getIndexBelowMaxForKey(key, this._limit);
   var index = this._storage.get(i);
-  console.log(index);
-  if(typeof index === 'object'){
-    return index[key];
+
+  if(index === null) {
+    return null;
+  } else if (Array.isArray(index[0])){
+    for(var i=0; i<index.length; i++) {
+      if (index[i][0] === key) {
+        return index[i][1];
+      }
+    }
+    return null;
   }else{
-    return index;
+    return index[1];
   }
 };
 
