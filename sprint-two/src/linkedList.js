@@ -15,13 +15,12 @@ var makeLinkedList = function(){
   };
 
   list.removeHead = function(){
+    var copy = this.head;
     if (this.head === this.tail && this.head !== null) {
-      var copy = this.head;
       delete this.head;
       this.head = null;
       this.tail = null;
     } else if(this.head !== this.tail) {
-      var copy = this.head;
       delete this.head;
       this.head = copy.next;
     }
